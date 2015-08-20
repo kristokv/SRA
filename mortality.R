@@ -24,7 +24,7 @@ load("dat.rda") #Load data
 # 11.CV
 # 12. CVI   
 stages<-c("CI","CII","CIII","CIV","CV","CVI") #Copepodite stages
-trans<-c("CI-CII","CII-CIII","CIII-CIV") #Copepodite stage pairs for which we estimate mortality
+trans<-c("CI-CII","CII-CIII","CIII-CIV","CIV-CV") #Copepodite stage pairs for which we estimate mortality
 mort_true<-c(0.09,0.105,0.075,0.03,0.025,0.02) #Stage-specific mortalities per copepodite stage (CI-CVI) used in the simulation
 mort_avg<-sapply(1:(length(mort_true)-1), function(i) mean(mort_true[i:(i+1)])) #Averaged per stage pair
 
