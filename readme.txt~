@@ -1,0 +1,9 @@
+The file mortality.R contains R code to estimate mortality for copepodite stage-pairs using a statistical regression approach.
+
+The file dat.rda contains a synthetic dataset with copepodite abundances sampled at spatiotemporally resolved survey stations. 
+Prior to sampling, the copepodites developed from eggs according to temperature-dependent growth functions and with the following stage-specific instantenous (daily) mortality rates: 
+Eggs: 0.23, CI:0.09, CII: 0.105, CIII: 0.075, CIV: 0.03, CV: 0.025, CVI: 0.02
+
+Created by Kristina Kvile, August 2015
+ 	
+
