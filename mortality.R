@@ -23,9 +23,8 @@ load("dat.rda") #Load data
 # 10.CIV
 # 11.CV
 # 12. CVI   
-years<-levels(dat$Year) #Years with data
 stages<-c("CI","CII","CIII","CIV","CV","CVI") #Copepodite stages
-trans<-c("CI-CII","CII-CIII","CIII-CIV","CIV-CV","CV-CVI") #Copepodite stage pairs
+trans<-c("CI-CII","CII-CIII","CIII-CIV") #Copepodite stage pairs for which we estimate mortality
 mort_true<-c(0.09,0.105,0.075,0.03,0.025,0.02) #Stage-specific mortalities per copepodite stage (CI-CVI) used in the simulation
 mort_avg<-sapply(1:(length(mort_true)-1), function(i) mean(mort_true[i:(i+1)])) #Averaged per stage pair
 
@@ -64,11 +63,11 @@ dat$Duration.CV<-aVI*(dat$Temp+alfa)^b    -aV*(dat$Temp+alfa)^b;
 #3. Approx. stage-specific age, centered around zero -> Estimates mortality (-m)
 
 #Matrix to store mortality estimates per stage-pair (CV-CVI not included)
-mortalities<-matrix(NA,ncol=length(trans)-1) #Overall mortality
-colnames(mortalities)<-trans[-5]
+mortalities<-matrix(NA,ncol=length(trans)) #Overall mortality
+colnames(mortalities)<-trans
 
 #Estimate mortality per stage pair
-for (i in 1:length(trans[-5])) {  
+for (i in 1:length(trans)) {  
   #Create data-frame of to successive stages, i and i+1
   combined.abundance<-data.frame(cbind(dat[,stages[i]],dat[,stages[i+1]])) 
   combined.ages<-data.frame(cbind(dat[,paste0("Age.",stages[i])],dat[,paste0("Age.",stages[i+1])])) 
@@ -95,8 +94,8 @@ for (i in 1:length(trans[-5])) {
 ###########################################
 #Bootstrap procedure for the SRA estimates
 B <- 1000 #The number of boostrap samples (note that 1000 iterations takes some time...)
-bootmat<-matrix(NA,nrow=2,ncol=length(trans)-1) #Matrix to store bootstrap results
-colnames(bootmat)<-trans[-5]
+bootmat<-matrix(NA,nrow=2,ncol=length(trans)) #Matrix to store bootstrap results
+colnames(bootmat)<-trans
 rownames(bootmat)<-c("Up","Low") #Upper and lower confidence limits for model coefficients
 
 #Do the bootstrap per stage-pair
@@ -122,16 +121,12 @@ for (i in c(1:4)) {
  
   #Doing the bootstrap with year as the sampling unit
   yrs <- as.character(levels(Data$Year))
-  n.yrs <- length(years)
-  n <- dim(Data)[1]
   #Splitting the data by year
   Data.list <- split(Data,Data$Year)
   names(Data.list) <- yrs
   #To store the resulting bootstrap vectors:
   boot.av.m <- NULL
-  boot.yr.m <- NULL
-  boot.sd.yr.m <- NULL
-  
+
   for(b in 1:B){
     #Sample years
     yrs.B <- sample(yrs,size=length(yrs),replace=T)
